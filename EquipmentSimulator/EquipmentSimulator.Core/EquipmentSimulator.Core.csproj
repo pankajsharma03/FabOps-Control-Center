@@ -37,11 +37,24 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\ISimulationEngine.cs" />
+    <Compile Include="Engine\PhysicsTelemetryGenerator.cs" />
+    <Compile Include="Engine\ProcessExecutionEngine.cs" />
     <Compile Include="Events\EquipmentStateChangedEventArgs.cs" />
+    <Compile Include="Events\FaultInjectedEventArgs.cs" />
+    <Compile Include="Events\LotCompletedEventArgs.cs" />
+    <Compile Include="Events\ProcessStepChangedEventArgs.cs" />
+    <Compile Include="Events\TelemetryUpdatedEventArgs.cs" />
+    <Compile Include="Events\WaferProcessedEventArgs.cs" />
     <Compile Include="Models\ConnectionState.cs" />
     <Compile Include="Models\Equipment.cs" />
     <Compile Include="Models\EquipmentState.cs" />
+    <Compile Include="Models\ProcessStep.cs" />
+    <Compile Include="Models\ProcessStepType.cs" />
+    <Compile Include="Models\Recipe.cs" />
+    <Compile Include="Models\SimulationFaultType.cs" />
     <Compile Include="Models\StateTransitionResult.cs" />
+    <Compile Include="Models\TelemetrySnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rules\StateTransitionMatrix.cs" />
   </ItemGroup>

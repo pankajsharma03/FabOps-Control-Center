@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EquipmentSimulator.Desktop"
         mc:Ignorable="d"
-        Title="FabOps Control Center — Equipment Simulator"
-        Height="720"
-        Width="960"
-        MinHeight="600"
-        MinWidth="800"
-        Background="#0F172A"
+        Title="FabOps Control Center — Equipment Simulator &amp; Process Physics Engine"
+        Height="840"
+        Width="1140"
+        MinHeight="700"
+        MinWidth="960"
+        Background="#0B1120"
         Foreground="#F8FAFC"
         FontFamily="Segoe UI, Segoe UI Variable, sans-serif"
         WindowStartupLocation="CenterScreen">
@@ -27,14 +27,14 @@
         <SolidColorBrush x:Key="TextMuted" Color="#94A3B8"/>
         <SolidColorBrush x:Key="TextLight" Color="#F1F5F9"/>
 
-        <!-- Button Style -->
+        <!-- Standard Button Style -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="#334155"/>
             <Setter Property="Foreground" Value="#F8FAFC"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Padding" Value="12,7"/>
-            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Margin" Value="3"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="#475569"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -95,14 +95,22 @@
             <Setter Property="BorderBrush" Value="#10B981"/>
         </Style>
 
-        <!-- Card Border Style -->
+        <!-- Speed Selector Pill Button -->
+        <Style x:Key="SpeedButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Background" Value="#0F172A"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="FontSize" Value="11"/>
+        </Style>
+
+        <!-- Card Style -->
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="{StaticResource CardBg}"/>
             <Setter Property="BorderBrush" Value="{StaticResource CardBorder}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
-            <Setter Property="Padding" Value="14"/>
-            <Setter Property="Margin" Value="0,0,0,12"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
         </Style>
 
         <!-- TextBox Style -->
@@ -111,23 +119,57 @@
             <Setter Property="Foreground" Value="#F8FAFC"/>
             <Setter Property="BorderBrush" Value="#475569"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Padding" Value="8,6"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="7,5"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="CaretBrush" Value="#38BDF8"/>
+        </Style>
+
+        <!-- Custom Smooth ProgressBar Style -->
+        <Style TargetType="ProgressBar">
+            <Setter Property="Background" Value="#0F172A"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ProgressBar">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                SnapsToDevicePixels="True">
+                            <Grid x:Name="PART_Track">
+                                <Border x:Name="PART_Indicator"
+                                        HorizontalAlignment="Left"
+                                        CornerRadius="3">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="#0284C7" Offset="0"/>
+                                            <GradientStop Color="#38BDF8" Offset="1"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="18">
+    <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Header -->
-            <RowDefinition Height="Auto"/> <!-- Status & Telemetry Cards -->
-            <RowDefinition Height="Auto"/> <!-- Controls Panel -->
+            <RowDefinition Height="Auto"/> <!-- 4 Telemetry HUD Cards -->
+            <RowDefinition Height="Auto"/> <!-- Process Step Sequence Pipeline -->
+            <RowDefinition Height="Auto"/> <!-- Recipe & Run Control Bar -->
+            <RowDefinition Height="Auto"/> <!-- Fault Injection Bar -->
             <RowDefinition Height="*"/>    <!-- Event Audit Log -->
             <RowDefinition Height="Auto"/> <!-- Footer Status Bar -->
         </Grid.RowDefinitions>
 
-        <!-- HEADER -->
-        <Border Grid.Row="0" Margin="0,0,0,16">
+        <!-- 1. HEADER & CONNECTION BAR -->
+        <Border Grid.Row="0" Margin="0,0,0,12">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -136,23 +178,35 @@
 
                 <StackPanel Grid.Column="0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="🔬 FabOps Control Center" FontSize="20" FontWeight="Bold" Foreground="#38BDF8"/>
-                        <Border Background="#1E293B" CornerRadius="4" Margin="12,0,0,0" Padding="8,2" VerticalAlignment="Center">
-                            <TextBlock Text="Equipment Simulator" FontSize="12" Foreground="#94A3B8" FontWeight="Medium"/>
+                        <TextBlock Text="🔬 FabOps Control Center" FontSize="19" FontWeight="Bold" Foreground="#38BDF8"/>
+                        <Border Background="#1E293B" CornerRadius="4" Margin="10,0,0,0" Padding="8,2" VerticalAlignment="Center">
+                            <TextBlock Text="Equipment Simulator &amp; Brain" FontSize="11" Foreground="#94A3B8" FontWeight="Medium"/>
                         </Border>
                         <Border Background="#0C4A6E" CornerRadius="4" Margin="6,0,0,0" Padding="8,2" VerticalAlignment="Center">
-                            <TextBlock Text="SEMI E30 Aligned" FontSize="12" Foreground="#38BDF8" FontWeight="SemiBold"/>
+                            <TextBlock Text="SEMI E30 (GEM)" FontSize="11" Foreground="#38BDF8" FontWeight="SemiBold"/>
                         </Border>
                     </StackPanel>
-                    <TextBlock Text="Semiconductor manufacturing equipment domain simulator with state matrix validation."
-                               FontSize="12" Foreground="{StaticResource TextMuted}" Margin="0,4,0,0"/>
+                    <TextBlock Text="Autonomous semiconductor process sequencer, high-vacuum physics simulation, and real-time fault interlock engine."
+                               FontSize="11" Foreground="{StaticResource TextMuted}" Margin="0,3,0,0"/>
                 </StackPanel>
 
-                <!-- Host Connection Status Pill & Connect/Disconnect -->
+                <!-- Speed Multiplier + Connection Pill -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <Border Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,0,10,0">
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="10" Height="10" Margin="0,0,8,0">
+                    <!-- Speed Selector -->
+                    <Border Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="6,2" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="⚡ Sim Speed:" Foreground="{StaticResource TextMuted}" FontSize="11" Margin="2,0,6,0" VerticalAlignment="Center"/>
+                            <Button Content="1x" Command="{Binding SetSpeedCommand}" CommandParameter="1.0" Style="{StaticResource SpeedButton}"/>
+                            <Button Content="2x" Command="{Binding SetSpeedCommand}" CommandParameter="2.0" Style="{StaticResource SpeedButton}"/>
+                            <Button Content="5x" Command="{Binding SetSpeedCommand}" CommandParameter="5.0" Style="{StaticResource SpeedButton}"/>
+                            <Button Content="10x" Command="{Binding SetSpeedCommand}" CommandParameter="10.0" Style="{StaticResource SpeedButton}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Host Connection Status Pill -->
+                    <Border Background="#1E293B" BorderBrush="#334155" BorderThickness="1" CornerRadius="6" Padding="8,4" Margin="0,0,6,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Ellipse Width="8" Height="8" Margin="0,0,6,0">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
                                         <Setter Property="Fill" Value="{StaticResource DangerRed}"/>
@@ -164,31 +218,31 @@
                                     </Style>
                                 </Ellipse.Style>
                             </Ellipse>
-                            <TextBlock Text="Host: " Foreground="{StaticResource TextMuted}" FontSize="12"/>
-                            <TextBlock Text="{Binding ConnectionStatus}" FontWeight="Bold" FontSize="12" Foreground="{StaticResource TextLight}"/>
+                            <TextBlock Text="Host: " Foreground="{StaticResource TextMuted}" FontSize="11"/>
+                            <TextBlock Text="{Binding ConnectionStatus}" FontWeight="Bold" FontSize="11" Foreground="{StaticResource TextLight}"/>
                         </StackPanel>
                     </Border>
-                    <Button Content="Connect" Command="{Binding ConnectCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,4,0"/>
+                    <Button Content="Connect" Command="{Binding ConnectCommand}" Style="{StaticResource SuccessButton}" Margin="0,0,3,0"/>
                     <Button Content="Disconnect" Command="{Binding DisconnectCommand}" Style="{StaticResource DangerButton}"/>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- TELEMETRY & STATUS CARDS -->
-        <Grid Grid.Row="1" Margin="0,0,0,12">
+        <!-- 2. TELEMETRY & STATUS CARDS (4 HUD PANELS) -->
+        <Grid Grid.Row="1" Margin="0,0,0,10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1.2*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
-                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="1.1*"/>
+                <ColumnDefinition Width="1.1*"/>
             </Grid.ColumnDefinitions>
 
             <!-- Card 1: Equipment State & ID -->
-            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,8,0">
                 <StackPanel>
-                    <TextBlock Text="EQUIPMENT OPERATIONAL STATE" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
-                    <StackPanel Orientation="Horizontal" Margin="0,8,0,4" VerticalAlignment="Center">
-                        <Border CornerRadius="6" Padding="10,4" Margin="0,0,8,0">
+                    <TextBlock Text="OPERATIONAL STATE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,6,0,4" VerticalAlignment="Center">
+                        <Border CornerRadius="6" Padding="10,3" Margin="0,0,6,0">
                             <Border.Style>
                                 <Style TargetType="Border">
                                     <Setter Property="Background" Value="#475569"/>
@@ -217,47 +271,71 @@
                                     </Style.Triggers>
                                 </Style>
                             </Border.Style>
-                            <TextBlock Text="{Binding EquipmentState}" FontSize="16" FontWeight="Bold" Foreground="White"/>
+                            <TextBlock Text="{Binding EquipmentState}" FontSize="15" FontWeight="Bold" Foreground="White"/>
                         </Border>
                     </StackPanel>
-                    <TextBlock Text="{Binding EquipmentId, StringFormat='ID: {0}'}" FontSize="12" Foreground="{StaticResource TextLight}"/>
-                    <TextBlock Text="{Binding ModelType, StringFormat='Model: {0}'}" FontSize="11" Foreground="{StaticResource TextMuted}"/>
+                    <TextBlock Text="{Binding EquipmentId, StringFormat='ID: {0}'}" FontSize="11" Foreground="{StaticResource TextLight}"/>
+                    <TextBlock Text="{Binding ModelType, StringFormat='Model: {0}'}" FontSize="10" Foreground="{StaticResource TextMuted}"/>
                 </StackPanel>
             </Border>
 
-            <!-- Card 2: Production Context -->
-            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
+            <!-- Card 2: Vacuum Physics Telemetry -->
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="0,0,8,0">
                 <StackPanel>
-                    <TextBlock Text="ACTIVE PRODUCTION" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
-                    <TextBlock Text="Recipe:" FontSize="11" Foreground="{StaticResource TextMuted}" Margin="0,6,0,0"/>
-                    <TextBlock Text="{Binding ActiveRecipeId}" FontSize="13" FontWeight="SemiBold" Foreground="#38BDF8" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock Text="Lot Number:" FontSize="11" Foreground="{StaticResource TextMuted}" Margin="0,4,0,0"/>
-                    <TextBlock Text="{Binding ActiveLotId}" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TextLight}" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="CHAMBER VACUUM PRESSURE" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
+                    <TextBlock Text="{Binding VacuumPressureFormatted}" FontSize="18" FontWeight="Bold" Foreground="#38BDF8" Margin="0,4,0,2"/>
+                    <Border Background="#0F172A" BorderBrush="#334155" BorderThickness="1" CornerRadius="4" Padding="6,2" Margin="0,2,0,0">
+                        <TextBlock Text="{Binding VacuumPhase}" FontSize="10" FontWeight="SemiBold" Foreground="{StaticResource TextMuted}" TextTrimming="CharacterEllipsis"/>
+                    </Border>
                 </StackPanel>
             </Border>
 
-            <!-- Card 3: Alarm & Fault Diagnostic -->
-            <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
+            <!-- Card 3: Thermal & Optical Laser Dose -->
+            <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="0,0,8,0">
                 <StackPanel>
-                    <TextBlock Text="ALARM / DIAGNOSTIC" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
-                    <TextBlock Text="Last Alarm Message:" FontSize="11" Foreground="{StaticResource TextMuted}" Margin="0,6,0,0"/>
-                    <TextBlock Text="{Binding LastAlarmMessage}" FontSize="12" FontWeight="Medium" Foreground="{StaticResource TextLight}" TextWrapping="Wrap" MaxHeight="45" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="THERMAL &amp; OPTICAL METRICS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
+                    <Grid Margin="0,4,0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Temperature:" FontSize="10" Foreground="{StaticResource TextMuted}"/>
+                            <TextBlock Text="{Binding ChamberTemperatureFormatted}" FontSize="15" FontWeight="Bold" Foreground="#10B981"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Laser Flux:" FontSize="10" Foreground="{StaticResource TextMuted}"/>
+                            <TextBlock Text="{Binding LaserDoseFormatted}" FontSize="11" FontWeight="SemiBold" Foreground="#F59E0B" TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock Text="{Binding LastAlarmMessage}" FontSize="10" Foreground="#F87171" TextTrimming="CharacterEllipsis" Margin="0,2,0,0"/>
                 </StackPanel>
             </Border>
 
-            <!-- Card 4: Equipment Info & Timestamps -->
+            <!-- Card 4: Wafer & Overall Lot Progress -->
             <Border Grid.Column="3" Style="{StaticResource CardStyle}">
                 <StackPanel>
-                    <TextBlock Text="TELEMETRY" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
-                    <TextBlock Text="Serial Number:" FontSize="11" Foreground="{StaticResource TextMuted}" Margin="0,6,0,0"/>
-                    <TextBlock Text="{Binding SerialNumber}" FontSize="12" Foreground="{StaticResource TextLight}"/>
-                    <TextBlock Text="Last State Change:" FontSize="11" Foreground="{StaticResource TextMuted}" Margin="0,4,0,0"/>
-                    <TextBlock Text="{Binding LastStateChangeTime}" FontSize="11" Foreground="{StaticResource TextMuted}"/>
+                    <Grid>
+                        <TextBlock Text="LOT &amp; WAFER PROGRESS" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
+                        <TextBlock Text="{Binding WaferStatusFormatted}" FontSize="11" FontWeight="Bold" Foreground="#38BDF8" HorizontalAlignment="Right"/>
+                    </Grid>
+
+                    <TextBlock Text="Current Step Progress:" FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,4,0,2"/>
+                    <Grid>
+                        <ProgressBar Value="{Binding StepProgressPercent, Mode=OneWay}" Maximum="100"/>
+                        <TextBlock Text="{Binding StepProgressPercent, StringFormat='{}{0:F1}%'}" FontSize="9" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <TextBlock Text="Overall Lot Progress:" FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,4,0,2"/>
+                    <Grid>
+                        <ProgressBar Value="{Binding LotProgressPercent, Mode=OneWay}" Maximum="100"/>
+                        <TextBlock Text="{Binding LotProgressPercent, StringFormat='{}{0:F1}%'}" FontSize="9" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!-- COMMAND & CONTROL PANEL -->
+        <!-- 3. VISUAL PROCESS STEP SEQUENCE PIPELINE -->
         <Border Grid.Row="2" Style="{StaticResource CardStyle}">
             <Grid>
                 <Grid.RowDefinitions>
@@ -265,31 +343,180 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Inputs row -->
-                <Grid Grid.Row="0" Margin="0,0,0,12">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                        <TextBlock Text="Recipe Name:" FontSize="11" Foreground="{StaticResource TextMuted}" Margin="0,0,0,4"/>
-                        <TextBox Text="{Binding RecipeInput, UpdateSourceTrigger=PropertyChanged}"/>
-                    </StackPanel>
-                    <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                        <TextBlock Text="Target Lot ID:" FontSize="11" Foreground="{StaticResource TextMuted}" Margin="0,0,0,4"/>
-                        <TextBox Text="{Binding LotInput, UpdateSourceTrigger=PropertyChanged}"/>
+                <Grid Grid.Row="0" Margin="0,0,0,8">
+                    <TextBlock Text="PROCESS STEP SEQUENCE PIPELINE (PHYSICAL TOOL STATE)" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Text="Active Step: " FontSize="10" Foreground="{StaticResource TextMuted}"/>
+                        <TextBlock Text="{Binding CurrentStepName}" FontSize="10" FontWeight="Bold" Foreground="#38BDF8"/>
                     </StackPanel>
                 </Grid>
 
-                <!-- State Transition Action Buttons -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Step 1: Wafer Load -->
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="6" Padding="8,6" Margin="0,0,6,0">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#0B1120"/>
+                                <Setter Property="BorderBrush" Value="#334155"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsStep1Active}" Value="True">
+                                        <Setter Property="Background" Value="#0369A1"/>
+                                        <Setter Property="BorderBrush" Value="#38BDF8"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="📦 Step 1" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Wafer Load &amp; Align" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextLight}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Atmospheric (760 Torr)" FontSize="9" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Step 2: Pump Down -->
+                    <Border Grid.Column="1" BorderThickness="1" CornerRadius="6" Padding="8,6" Margin="0,0,6,0">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#0B1120"/>
+                                <Setter Property="BorderBrush" Value="#334155"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsStep2Active}" Value="True">
+                                        <Setter Property="Background" Value="#0369A1"/>
+                                        <Setter Property="BorderBrush" Value="#38BDF8"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="🌪️ Step 2" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Chamber Evacuation" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextLight}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Turbo Pump → 1.0e-6 Torr" FontSize="9" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Step 3: Exposure -->
+                    <Border Grid.Column="2" BorderThickness="1" CornerRadius="6" Padding="8,6" Margin="0,0,6,0">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#0B1120"/>
+                                <Setter Property="BorderBrush" Value="#334155"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsStep3Active}" Value="True">
+                                        <Setter Property="Background" Value="#047857"/>
+                                        <Setter Property="BorderBrush" Value="#10B981"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="⚡ Step 3" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Laser Exposure Scan" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextLight}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="ArF / EUV Dose Scan" FontSize="9" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Step 4: Chamber Vent -->
+                    <Border Grid.Column="3" BorderThickness="1" CornerRadius="6" Padding="8,6" Margin="0,0,6,0">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#0B1120"/>
+                                <Setter Property="BorderBrush" Value="#334155"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsStep4Active}" Value="True">
+                                        <Setter Property="Background" Value="#0369A1"/>
+                                        <Setter Property="BorderBrush" Value="#38BDF8"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="💨 Step 4" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Chamber N2 Vent" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextLight}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Purge → 760 Torr" FontSize="9" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Step 5: Wafer Unload -->
+                    <Border Grid.Column="4" BorderThickness="1" CornerRadius="6" Padding="8,6">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#0B1120"/>
+                                <Setter Property="BorderBrush" Value="#334155"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsStep5Active}" Value="True">
+                                        <Setter Property="Background" Value="#0369A1"/>
+                                        <Setter Property="BorderBrush" Value="#38BDF8"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <StackPanel HorizontalAlignment="Center">
+                            <TextBlock Text="📤 Step 5" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Wafer Unload" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource TextLight}" HorizontalAlignment="Center"/>
+                            <TextBlock Text="FOUP Advance &amp; Index" FontSize="9" Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- 4. RECIPE CONFIGURATION & RUN CONTROLS -->
+        <Border Grid.Row="3" Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Inputs row -->
+                <Grid Grid.Row="0" Margin="0,0,0,8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1.2*"/>
+                        <ColumnDefinition Width="0.8*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Recipe Preset Dropdown -->
+                    <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                        <TextBlock Text="Recipe Program Preset:" FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,0,0,3"/>
+                        <ComboBox ItemsSource="{Binding AvailableRecipes}"
+                                  SelectedItem="{Binding SelectedRecipe}"
+                                  DisplayMemberPath="RecipeName"
+                                  Background="#0B1120"
+                                  Foreground="#F8FAFC"
+                                  BorderBrush="#475569"
+                                  Padding="6,4"/>
+                    </StackPanel>
+
+                    <!-- Lot ID -->
+                    <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                        <TextBlock Text="Target Lot ID:" FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,0,0,3"/>
+                        <TextBox Text="{Binding LotInput, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <!-- Total Wafers -->
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Wafers / Lot:" FontSize="10" Foreground="{StaticResource TextMuted}" Margin="0,0,0,3"/>
+                        <TextBox Text="{Binding TotalWafersInput, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Action Buttons WrapPanel -->
                 <WrapPanel Grid.Row="1" Orientation="Horizontal">
                     <Button Content="⚡ Power On (Idle)" Command="{Binding PowerOnCommand}" Style="{StaticResource PrimaryButton}"/>
                     <Button Content="📋 Setup Run" Command="{Binding SetupCommand}"/>
-                    <Button Content="▶ Start Run" Command="{Binding StartRunCommand}" Style="{StaticResource SuccessButton}"/>
+                    <Button Content="▶ Start Process Run" Command="{Binding StartRunCommand}" Style="{StaticResource SuccessButton}"/>
                     <Button Content="⏸ Pause" Command="{Binding PauseCommand}" Style="{StaticResource WarningButton}"/>
-                    <Button Content="⏯ Resume" Command="{Binding ResumeCommand}" Style="{StaticResource SuccessButton}"/>
-                    <Button Content="⏹ Complete / Stop" Command="{Binding StopCommand}"/>
-                    <Button Content="🚨 Trigger Fault" Command="{Binding TripAlarmCommand}" Style="{StaticResource DangerButton}"/>
+                    <Button Content="⏯ Resume" Command="{Binding ResumeCommand}" Style="{StaticResource PrimaryButton}"/>
+                    <Button Content="⏹ Stop / Abort" Command="{Binding StopCommand}"/>
                     <Button Content="🔄 Clear Alarm" Command="{Binding ClearAlarmCommand}" Style="{StaticResource WarningButton}"/>
                     <Button Content="🛠 Maintenance" Command="{Binding MaintenanceCommand}"/>
                     <Button Content="🛑 Power Off" Command="{Binding PowerOffCommand}"/>
@@ -297,17 +524,39 @@
             </Grid>
         </Border>
 
-        <!-- AUDIT LOG / EVENT TRAIL -->
-        <Border Grid.Row="3" Style="{StaticResource CardStyle}" Margin="0,0,0,10">
+        <!-- 5. FAULT & ANOMALY INJECTION BAR -->
+        <Border Grid.Row="4" Style="{StaticResource CardStyle}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0">
+                    <TextBlock Text="🚨 FAULT INJECTION (SAFETY TRIPS)" FontSize="10" FontWeight="Bold" Foreground="#F87171"/>
+                    <TextBlock Text="Simulate hardware anomalies" FontSize="9" Foreground="{StaticResource TextMuted}"/>
+                </StackPanel>
+
+                <WrapPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="💥 Chamber Vacuum Leak (ALARM-301)" Command="{Binding InjectVacuumLeakCommand}" Style="{StaticResource DangerButton}"/>
+                    <Button Content="🔥 Thermal Runaway (ALARM-402)" Command="{Binding InjectThermalExcursionCommand}" Style="{StaticResource DangerButton}"/>
+                    <Button Content="🔍 Optics Degradation (ALARM-505)" Command="{Binding InjectLaserFaultCommand}" Style="{StaticResource WarningButton}"/>
+                    <Button Content="🤖 Robot End-Effector Error (ALARM-104)" Command="{Binding InjectWaferTransferErrorCommand}" Style="{StaticResource WarningButton}"/>
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <!-- 6. AUDIT LOG / REAL-TIME EVENT STREAM -->
+        <Border Grid.Row="5" Style="{StaticResource CardStyle}" Margin="0,0,0,8">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,8">
-                    <TextBlock Text="STATE TRANSITION &amp; DOMAIN EVENT LOG" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
-                    <TextBlock Text="Real-time chronological events" HorizontalAlignment="Right" FontSize="11" Foreground="{StaticResource TextMuted}"/>
+                <Grid Grid.Row="0" Margin="0,0,0,6">
+                    <TextBlock Text="REAL-TIME TELEMETRY, STATE TRANSITIONS &amp; EVENT AUDIT STREAM" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextMuted}"/>
+                    <TextBlock Text="Live chronological domain events" HorizontalAlignment="Right" FontSize="10" Foreground="{StaticResource TextMuted}"/>
                 </Grid>
 
                 <ListBox Grid.Row="1"
@@ -317,11 +566,11 @@
                          BorderThickness="1"
                          Foreground="#E2E8F0"
                          FontFamily="Consolas, Courier New, monospace"
-                         FontSize="12"
+                         FontSize="11"
                          ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="ListBoxItem">
-                            <Setter Property="Padding" Value="6,4"/>
+                            <Setter Property="Padding" Value="4,2"/>
                             <Setter Property="BorderThickness" Value="0,0,0,1"/>
                             <Setter Property="BorderBrush" Value="#1E293B"/>
                         </Style>
@@ -330,15 +579,15 @@
             </Grid>
         </Border>
 
-        <!-- STATUS BAR FOOTER -->
-        <Border Grid.Row="4" Background="#0B1120" BorderBrush="#334155" BorderThickness="1" CornerRadius="4" Padding="10,6">
+        <!-- 7. STATUS BAR FOOTER -->
+        <Border Grid.Row="6" Background="#0B1120" BorderBrush="#334155" BorderThickness="1" CornerRadius="4" Padding="8,4">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" FontSize="12" Foreground="{StaticResource PrimaryAccent}" TextTrimming="CharacterEllipsis"/>
-                <TextBlock Grid.Column="1" Text="Milestone 3: Domain &amp; State" FontSize="11" Foreground="{StaticResource TextMuted}"/>
+                <TextBlock Grid.Column="0" Text="{Binding StatusMessage}" FontSize="11" Foreground="{StaticResource PrimaryAccent}" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Column="1" Text="Milestone 4 — Process Engine &amp; Physics Simulation | .NET Framework 4.8.1" FontSize="10" Foreground="{StaticResource TextMuted}"/>
             </Grid>
         </Border>
     </Grid>

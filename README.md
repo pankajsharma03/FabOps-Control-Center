@@ -28,10 +28,19 @@ Production-style semiconductor manufacturing operations and equipment simulation
 - 46 automated unit tests verifying all state paths and domain invariants
 - Rich, modern equipment simulator UI with telemetry cards, dynamic state controls, and event audit trail
 
-### Milestone 4 — Equipment State Machine / Brain (Next)
-- Autonomous execution loop and recipe process step simulation
-- Live simulated telemetry (chamber vacuum pressure, temperature, RF power)
-- Background timer sequencing and automatic fault trigger simulation
+### Milestone 4 — Equipment State Machine / Brain & Telemetry Simulation (Completed)
+- Autonomous asynchronous process sequencing engine (`ProcessExecutionEngine`)
+- 5 Industrial process steps (`WaferLoad` -> `PumpDown` -> `Exposure` -> `ChamberVent` -> `WaferUnload`)
+- Dynamic high-vacuum physics simulation ($1.0 \times 10^{-6}\text{ Torr}$ pumpdown, $N_2$ purge vent, thermal PID jitter, laser exposure dose)
+- Industrial safety interlock fault injection (Vacuum Leak, Thermal Runaway, Laser Drift, Robot Arm Grip Error)
+- Real-time WPF UI with 5-stage visual step pipeline, 4 telemetry HUD cards, speed multipliers (1x–10x), and live audit logs
+- **67 Automated Unit Tests** with 100% pass rate across domain, physics, recipes, and simulation engine
+
+### Milestone 5 — TCP/IP Server & SECS/GEM Messaging (Next)
+- Asynchronous TCP/IP socket server (`SocketAsyncEventArgs` zero-allocation architecture)
+- Structured XML & binary packet framing
+- SECS-II (SEMI E5) message transaction handlers and remote command dispatch (START, STOP, PAUSE, PP-SELECT)
+- Real-time S6F11 event reports for factory host MES integration
 
 ## Planned Communication Architecture
 
